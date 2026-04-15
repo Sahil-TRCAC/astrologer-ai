@@ -1,21 +1,10 @@
-import requests
+import google.generativeai as genai
+import os
 
-API_KEY = "AIzaSyD1A3gosQ6Owzj3fSGGq7W8Z8Sc_09YQ84"
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# List all available models
-url = f"https://generativelanguage.googleapis.com/v1beta/models?key={API_KEY}"
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-response = requests.get(url)
+response = model.generate_content("your prompt here")
 
-if response.status_code == 200:
-    models = response.json().get('models', [])
-    print("Available Gemini Models:\n")
-    for model in models:
-        name = model.get('name', '').replace('models/', '')
-        if 'gemini' in name.lower():
-            print(f"✅ {name}")
-            print(f"   Description: {model.get('description', 'N/A')[:80]}...")
-            print(f"   Methods: {model.get('supported_generation_methods', [])}")
-            print()
-else:
-    print(f"Error: {response.text}")
+print(response.text)
