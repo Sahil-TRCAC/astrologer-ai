@@ -48,3 +48,23 @@ Respond as a professional astrologer:"""
             })
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
+print("API KEY:", os.getenv("GEMINI_API_KEY"))
+
+try:
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt)
+
+    print("RESPONSE:", response)
+    print("TEXT:", getattr(response, "text", "NO TEXT"))
+
+    return JsonResponse({
+        'success': True,
+        'answer': response.text
+    })
+
+except Exception as e:
+    print("FULL ERROR:", e)
+    return JsonResponse({
+        'success': False,
+        'error': str(e)
+    })
