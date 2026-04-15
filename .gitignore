@@ -1,0 +1,6 @@
+venv/
+astrologer_ai/venv/
+__pycache__/
+*.pyc
+db.sqlite3
+.env

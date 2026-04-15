@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologer AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #764ba2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .answer-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .answer-box h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+        
+        .answer-content {
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+        }
+        
+        .error {
+            color: red;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffe6e6;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .example-prompts {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        
+        .example-prompts h4 {
+            margin-bottom: 10px;
+            color: #764ba2;
+        }
+        
+        .example-btn {
+            background: white;
+            color: #764ba2;
+            border: 1px solid #764ba2;
+            margin-top: 5px;
+            padding: 8px;
+            font-size: 14px;
+            width: auto;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        
+        .example-btn:hover {
+            background: #764ba2;
+            color: white;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 Astrologer AI</h1>
+        <div class="subtitle">Your Personal AI Astrologer</div>
+        
+        <div class="form-group">
+            <label>📜 System Prompt (How should the astrologer behave?)</label>
+            <textarea id="systemPrompt" placeholder="Example: You are a Vedic astrologer who speaks in Hindi and English. You give detailed readings based on planetary positions. You are warm and compassionate.">You are a professional Vedic astrologer with 20 years of experience. You give detailed, accurate, and compassionate readings. You explain things in simple terms and always end with practical advice.</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>⭐ Your Question</label>
+            <input type="text" id="userQuestion" placeholder="Example: When will I get married? or Will my business succeed?">
+        </div>
+        
+        <button onclick="getAstrologyReading()">Get Your Reading 🔮</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Consulting the stars...</p>
+        </div>
+        
+        <div class="answer-box" id="answerBox">
+            <h3>🌟 Astrologer's Prediction:</h3>
+            <div class="answer-content" id="answerContent"></div>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="example-prompts">
+            <h4>📌 Example System Prompts (Try These):</h4>
+            <button class="example-btn" onclick="setSystemPrompt('You are a love and relationship astrologer. You specialize in marriage timing, compatibility, and romance. You give hopeful but realistic advice.')">❤️ Love Astrologer</button>
+            <button class="example-btn" onclick="setSystemPrompt('You are a career and finance astrologer. You analyze Saturn, Jupiter, and Mercury positions to give career advice. You are practical and strategic.')">💼 Career Astrologer</button>
+            <button class="example-btn" onclick="setSystemPrompt('You are a mystical astrologer who uses tarot and astrology together. You speak poetically and give spiritual guidance.')">🔮 Mystical Astrologer</button>
+            <button class="example-btn" onclick="setSystemPrompt('You are a strict traditional astrologer. You only use ancient texts and give precise predictions without sugar-coating.')">📖 Traditional Astrologer</button>
+        </div>
+    </div>
+    
+    <script>
+        async function getAstrologyReading() {
+            const systemPrompt = document.getElementById('systemPrompt').value;
+            const userQuestion = document.getElementById('userQuestion').value;
+            
+            if (!userQuestion) {
+                showError('Please enter your question first!');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('answerBox').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            
+            try {
+                const response = await fetch('/get-astrology/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        system_prompt: systemPrompt,
+                        user_question: userQuestion
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('answerContent').innerText = data.answer;
+                    document.getElementById('answerBox').style.display = 'block';
+                } else {
+                    showError('Error: ' + data.error);
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function setSystemPrompt(prompt) {
+            document.getElementById('systemPrompt').value = prompt;
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.innerText = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Press Enter to submit
+        document.getElementById('userQuestion').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getAstrologyReading();
+            }
+        });
+    </script>
+</body>
+</html>
