@@ -3,272 +3,882 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astrologer AI</title>
+    <title>✨ Celestial Astrologer AI | Cosmic Wisdom at Your Fingertips</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             min-height: 100vh;
-            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+
+        /* Animated Stars Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #764ba2;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        textarea, input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #764ba2;
-        }
-        
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 20px;
-            display: none;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #764ba2;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Floating Planets */
+        .planet {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
-        .answer-box {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            display: none;
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 55px rgba(0, 0, 0, 0.4);
         }
-        
-        .answer-box h3 {
-            color: #764ba2;
-            margin-bottom: 10px;
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
         }
-        
-        .answer-content {
-            line-height: 1.6;
-            color: #333;
-            white-space: pre-wrap;
-        }
-        
-        .error {
-            color: red;
-            margin-top: 10px;
-            padding: 10px;
-            background: #ffe6e6;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .example-prompts {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 10px;
-        }
-        
-        .example-prompts h4 {
-            margin-bottom: 10px;
-            color: #764ba2;
-        }
-        
-        .example-btn {
-            background: white;
-            color: #764ba2;
-            border: 1px solid #764ba2;
-            margin-top: 5px;
-            padding: 8px;
-            font-size: 14px;
-            width: auto;
-            margin-right: 10px;
+
+        .cosmic-icon {
+            font-size: 80px;
+            animation: rotate 10s infinite linear;
             display: inline-block;
         }
-        
-        .example-btn:hover {
-            background: #764ba2;
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #ffd89b 0%, #c7e9fb 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 20px 0 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            color: #ffd89b;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 1em;
+        }
+
+        textarea, select, input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             color: white;
-            transform: translateY(-1px);
+            font-size: 0.95em;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        select option {
+            background: #302b63;
+            color: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ffd89b;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 216, 155, 0.2);
+        }
+
+        textarea::placeholder, input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Example Questions */
+        .examples {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .example-btn {
+            background: rgba(255, 216, 155, 0.1);
+            border: 1px solid rgba(255, 216, 155, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #ffd89b;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            background: rgba(255, 216, 155, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .ask-btn, .clear-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ask-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .clear-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ask-btn::before, .clear-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .ask-btn:hover::before, .clear-btn:hover::before {
+            left: 100%;
+        }
+
+        .ask-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .ask-btn:active, .clear-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .cosmic-loader {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 216, 155, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffd89b;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #ffd89b;
+            margin-top: 15px;
+            font-size: 1em;
+        }
+
+        /* Result Section */
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            border-left: 4px solid #ffd89b;
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-title {
+            color: #ffd89b;
+            font-weight: 600;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            background: rgba(255, 216, 155, 0.1);
+            border: 1px solid rgba(255, 216, 155, 0.3);
+            border-radius: 10px;
+            color: #ffd89b;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 216, 155, 0.2);
+            transform: scale(1.05);
+        }
+
+        .result-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: #ffd89b;
+            font-size: 0.9em;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .glass-card {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .cosmic-icon {
+                font-size: 50px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Volume Control */
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 8px 15px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .volume-control:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .volume-icon {
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
+    <!-- Animated Stars -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Floating Planets -->
+    <div class="planet" style="width: 200px; height: 200px; background: radial-gradient(circle, #ffd89b, transparent); top: 10%; left: -50px;"></div>
+    <div class="planet" style="width: 150px; height: 150px; background: radial-gradient(circle, #c7e9fb, transparent); bottom: 10%; right: -30px; animation-duration: 25s;"></div>
+    <div class="planet" style="width: 100px; height: 100px; background: radial-gradient(circle, #764ba2, transparent); top: 50%; right: 20%; animation-duration: 15s;"></div>
+
+    <!-- Volume Control -->
+    <div class="volume-control" id="volumeControl">
+        <span class="volume-icon" id="volumeIcon">🔊</span>
+        <span style="font-size: 0.8em;">Cosmic Sounds</span>
+    </div>
+
     <div class="container">
-        <h1>🔮 Astrologer AI</h1>
-        <div class="subtitle">Your Personal AI Astrologer</div>
-        
-        <div class="form-group">
-            <label>📜 System Prompt (How should the astrologer behave?)</label>
-            <textarea id="systemPrompt" placeholder="Example: You are a Vedic astrologer who speaks in Hindi and English. You give detailed readings based on planetary positions. You are warm and compassionate.">You are a professional Vedic astrologer with 20 years of experience. You give detailed, accurate, and compassionate readings. You explain things in simple terms and always end with practical advice.</textarea>
-        </div>
-        
-        <div class="form-group">
-            <label>⭐ Your Question</label>
-            <input type="text" id="userQuestion" placeholder="Example: When will I get married? or Will my business succeed?">
-        </div>
-        
-        <button onclick="getAstrologyReading()">Get Your Reading 🔮</button>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Consulting the stars...</p>
-        </div>
-        
-        <div class="answer-box" id="answerBox">
-            <h3>🌟 Astrologer's Prediction:</h3>
-            <div class="answer-content" id="answerContent"></div>
-        </div>
-        
-        <div class="error" id="error"></div>
-        
-        <div class="example-prompts">
-            <h4>📌 Example System Prompts (Try These):</h4>
-            <button class="example-btn" onclick="setSystemPrompt('You are a love and relationship astrologer. You specialize in marriage timing, compatibility, and romance. You give hopeful but realistic advice.')">❤️ Love Astrologer</button>
-            <button class="example-btn" onclick="setSystemPrompt('You are a career and finance astrologer. You analyze Saturn, Jupiter, and Mercury positions to give career advice. You are practical and strategic.')">💼 Career Astrologer</button>
-            <button class="example-btn" onclick="setSystemPrompt('You are a mystical astrologer who uses tarot and astrology together. You speak poetically and give spiritual guidance.')">🔮 Mystical Astrologer</button>
-            <button class="example-btn" onclick="setSystemPrompt('You are a strict traditional astrologer. You only use ancient texts and give precise predictions without sugar-coating.')">📖 Traditional Astrologer</button>
+        <div class="glass-card">
+            <div class="header">
+                <div class="cosmic-icon">🔮✨🌙</div>
+                <h1>Celestial Astrologer AI</h1>
+                <div class="subtitle">Unlock the wisdom of the cosmos • AI-powered astrology readings</div>
+            </div>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>⭐ Your Zodiac Sign</label>
+                    <select id="zodiac">
+                        <option value="">Select your sign</option>
+                        <option value="aries">♈ Aries (Mar 21 - Apr 19)</option>
+                        <option value="taurus">♉ Taurus (Apr 20 - May 20)</option>
+                        <option value="gemini">♊ Gemini (May 21 - Jun 20)</option>
+                        <option value="cancer">♋ Cancer (Jun 21 - Jul 22)</option>
+                        <option value="leo">♌ Leo (Jul 23 - Aug 22)</option>
+                        <option value="virgo">♍ Virgo (Aug 23 - Sep 22)</option>
+                        <option value="libra">♎ Libra (Sep 23 - Oct 22)</option>
+                        <option value="scorpio">♏ Scorpio (Oct 23 - Nov 21)</option>
+                        <option value="sagittarius">♐ Sagittarius (Nov 22 - Dec 21)</option>
+                        <option value="capricorn">♑ Capricorn (Dec 22 - Jan 19)</option>
+                        <option value="aquarius">♒ Aquarius (Jan 20 - Feb 18)</option>
+                        <option value="pisces">♓ Pisces (Feb 19 - Mar 20)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>🌙 Birth Date (Optional)</label>
+                    <input type="date" id="birthdate">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>💫 What would you like to know?</label>
+                <textarea id="question" rows="5" placeholder="Ask about love, career, life purpose, relationships, or any aspect of your journey..."></textarea>
+                
+                <div class="examples">
+                    <div class="example-btn" onclick="setExample('What does my future hold in love and relationships?')">💖 Love & Relationships</div>
+                    <div class="example-btn" onclick="setExample('What career path is best suited for my talents?')">💼 Career Path</div>
+                    <div class="example-btn" onclick="setExample('What is my life purpose and spiritual journey?')">🌟 Life Purpose</div>
+                    <div class="example-btn" onclick="setExample('What opportunities are coming my way this month?')">📅 Upcoming Opportunities</div>
+                    <div class="example-btn" onclick="setExample('How can I improve my financial situation?')">💰 Financial Guidance</div>
+                    <div class="example-btn" onclick="setExample('What should I focus on for personal growth?')">🌱 Personal Growth</div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="ask-btn" onclick="askAstrologer()">
+                    ✨ Receive Cosmic Guidance ✨
+                </button>
+                <button class="clear-btn" onclick="clearForm()">
+                    🗑️ Clear All
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="cosmic-loader"></div>
+                <div class="loading-text" id="loadingText">Connecting to the cosmos... 🔮</div>
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-header">
+                    <div class="result-title">
+                        <span>🌙</span>
+                        <span>Your Celestial Reading</span>
+                        <span>⭐</span>
+                    </div>
+                    <div class="result-actions">
+                        <button class="action-btn" onclick="copyReading()">📋 Copy Reading</button>
+                        <button class="action-btn" onclick="shareReading()">📤 Share Reading</button>
+                        <button class="action-btn" onclick="downloadReading()">💾 Download</button>
+                        <button class="action-btn" onclick="speakReading()">🔊 Listen</button>
+                    </div>
+                </div>
+                <div class="result-content" id="resultContent"></div>
+            </div>
+
+            <div class="footer">
+                ⚡ Powered by Google Gemini AI • Your cosmic guide awaits
+            </div>
         </div>
     </div>
-    
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
     <script>
-        async function getAstrologyReading() {
-            const systemPrompt = document.getElementById('systemPrompt').value;
-            const userQuestion = document.getElementById('userQuestion').value;
+        // Audio context for cosmic sounds
+        let audioEnabled = false;
+        let audioContext = null;
+        
+        // Generate animated stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${2 + Math.random() * 3}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, duration);
+        }
+
+        // Play cosmic sound
+        function playCosmicSound() {
+            if (!audioEnabled) return;
             
-            if (!userQuestion) {
-                showError('Please enter your question first!');
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 432; // Cosmic frequency
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 1);
+            oscillator.stop(audioContext.currentTime + 1);
+        }
+
+        // Toggle audio
+        document.getElementById('volumeControl').addEventListener('click', () => {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('volumeIcon');
+            if (audioEnabled) {
+                icon.textContent = '🔊';
+                showToast('🔊 Cosmic sounds enabled', 2000);
+                playCosmicSound();
+            } else {
+                icon.textContent = '🔇';
+                showToast('🔇 Cosmic sounds disabled', 2000);
+            }
+        });
+
+        // Set example question
+        function setExample(question) {
+            document.getElementById('question').value = question;
+            document.getElementById('question').focus();
+            showToast('✨ Question set! Click the button for your reading.', 2000);
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('question').value = '';
+            document.getElementById('zodiac').value = '';
+            document.getElementById('birthdate').value = '';
+            document.getElementById('result').style.display = 'none';
+            showToast('🗑️ All fields cleared', 2000);
+        }
+
+        // Copy reading to clipboard
+        function copyReading() {
+            const content = document.getElementById('resultContent').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                showToast('📋 Reading copied to clipboard!', 2000);
+                playCosmicSound();
+            }).catch(() => {
+                showToast('❌ Failed to copy', 2000);
+            });
+        }
+
+        // Share reading (Web Share API)
+        function shareReading() {
+            const content = document.getElementById('resultContent').innerText;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Celestial Reading',
+                    text: content,
+                    url: window.location.href,
+                }).catch(() => {
+                    showToast('❌ Sharing cancelled', 2000);
+                });
+            } else {
+                copyReading();
+                showToast('📋 Reading copied! Share it manually.', 2000);
+            }
+        }
+
+        // Download reading as text file
+        function downloadReading() {
+            const content = document.getElementById('resultContent').innerText;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `astrology-reading-${new Date().toISOString().slice(0,19)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('💾 Reading downloaded!', 2000);
+            playCosmicSound();
+        }
+
+        // Text-to-speech
+        function speakReading() {
+            const content = document.getElementById('resultContent').innerText;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(content);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.voice = speechSynthesis.getVoices().find(voice => voice.lang === 'en-US');
+                speechSynthesis.speak(utterance);
+                showToast('🔊 Speaking your reading...', 2000);
+                playCosmicSound();
+            } else {
+                showToast('❌ Text-to-speech not supported', 2000);
+            }
+        }
+
+        // Get zodiac emoji
+        function getZodiacEmoji(zodiac) {
+            const emojis = {
+                'aries': '♈', 'taurus': '♉', 'gemini': '♊', 'cancer': '♋',
+                'leo': '♌', 'virgo': '♍', 'libra': '♎', 'scorpio': '♏',
+                'sagittarius': '♐', 'capricorn': '♑', 'aquarius': '♒', 'pisces': '♓'
+            };
+            return emojis[zodiac] || '⭐';
+        }
+
+        // Loading messages animation
+        const loadingMessages = [
+            'Consulting the stars... ✨',
+            'Reading planetary alignments... 🌍',
+            'Calculating cosmic energies... 🔮',
+            'Channeling universal wisdom... 🌙',
+            'Almost there... ⭐',
+            'The universe is responding... 🌌'
+        ];
+        
+        let messageInterval;
+        function startLoadingMessages() {
+            let index = 0;
+            const loadingText = document.getElementById('loadingText');
+            messageInterval = setInterval(() => {
+                loadingText.textContent = loadingMessages[index % loadingMessages.length];
+                index++;
+            }, 2000);
+        }
+        
+        function stopLoadingMessages() {
+            clearInterval(messageInterval);
+        }
+
+        // Main function to ask astrologer
+        async function askAstrologer() {
+            const userQuestion = document.getElementById('question').value;
+            
+            if (!userQuestion.trim()) {
+                const textarea = document.getElementById('question');
+                textarea.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    textarea.style.animation = '';
+                }, 500);
+                showToast('✨ Please ask your question to the cosmos! ✨', 3000);
                 return;
             }
             
-            // Show loading
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('answerBox').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
+            const loading = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            loading.style.display = 'block';
+            resultDiv.style.display = 'none';
+            startLoadingMessages();
+            playCosmicSound();
+            
+            const zodiac = document.getElementById('zodiac').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const zodiacEmoji = getZodiacEmoji(zodiac);
+            
+            let personalizedPrompt = `You are "Celestial Astrologer AI" - a wise, compassionate, and insightful cosmic guide with deep knowledge of Vedic and Western astrology. 
+            Your personality: Warm, mystical, poetic, and encouraging. 
+            Speak with cosmic wisdom but remain practical and helpful.
+            Use occasional astrological terms (retrograde, ascendant, planetary alignment, etc.) but explain them.
+            Always end with an encouraging message about their potential and the universe's support.
+            Keep responses between 150-300 words unless the question requires more detail.`;
+            
+            if (zodiac) {
+                personalizedPrompt += `\n\nThe user's zodiac sign is ${zodiac.toUpperCase()} ${zodiacEmoji}. Please incorporate this into your reading.`;
+            }
+            
+            if (birthdate) {
+                const birthDateObj = new Date(birthdate);
+                const age = Math.floor((new Date() - birthDateObj) / (365.25 * 24 * 60 * 60 * 1000));
+                personalizedPrompt += `\n\nThe user was born on ${birthdate} (Age: ${age}). Please consider their age in your guidance.`;
+            }
             
             try {
-                const response = await fetch('/get-astrology/', {
+                const response = await fetch('/get-astrology-reading/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        system_prompt: systemPrompt,
+                        system_prompt: personalizedPrompt,
                         user_question: userQuestion
                     })
                 });
                 
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error('Server error. Please check if the server is running.');
+                }
+                
                 const data = await response.json();
                 
+                stopLoadingMessages();
+                loading.style.display = 'none';
+                playCosmicSound();
+                
                 if (data.success) {
-                    document.getElementById('answerContent').innerText = data.answer;
-                    document.getElementById('answerBox').style.display = 'block';
+                    let formattedAnswer = data.answer
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        .replace(/\n/g, '<br>');
+                    
+                    if (zodiac) {
+                        formattedAnswer = `<span style="font-size: 1.2em;">${zodiacEmoji}</span> ${formattedAnswer}`;
+                    }
+                    
+                    resultContent.innerHTML = formattedAnswer;
+                    resultDiv.style.display = 'block';
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    showToast('✨ Your reading is ready! ✨', 3000);
                 } else {
-                    showError('Error: ' + data.error);
+                    resultContent.innerHTML = `<span style="color: #ff6b6b;">❌ Cosmic error: ${data.error}</span><br><br>Please check your connection and try again.`;
+                    resultDiv.style.display = 'block';
+                    showToast('❌ Error getting reading', 3000);
                 }
+                
             } catch (error) {
-                showError('Network error: ' + error.message);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
+                stopLoadingMessages();
+                loading.style.display = 'none';
+                resultContent.innerHTML = `<span style="color: #ff6b6b;">⚠️ Connection to the cosmos interrupted!</span><br><br>
+                Error: ${error.message}<br><br>
+                <strong>Try these fixes:</strong><br>
+                • Make sure the Django server is running<br>
+                • Refresh the page and try again<br>
+                • Check your internet connection`;
+                resultDiv.style.display = 'block';
+                showToast('❌ Connection error', 3000);
+                console.error('Error:', error);
             }
         }
+
+        // Add shake animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
         
-        function setSystemPrompt(prompt) {
-            document.getElementById('systemPrompt').value = prompt;
-        }
+        // Initialize stars on load
+        createStars();
         
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.innerText = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
-        
-        // Press Enter to submit
-        document.getElementById('userQuestion').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                getAstrologyReading();
+        // Allow Enter key to submit (Ctrl+Enter or Cmd+Enter)
+        document.getElementById('question').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                askAstrologer();
             }
         });
+        
+        // Add typing animation effect
+        const textarea = document.getElementById('question');
+        textarea.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.3s ease';
+        });
+        textarea.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+        
+        // Save form data to localStorage
+        function saveFormData() {
+            localStorage.setItem('astrologer_zodiac', document.getElementById('zodiac').value);
+            localStorage.setItem('astrologer_birthdate', document.getElementById('birthdate').value);
+        }
+        
+        function loadFormData() {
+            const savedZodiac = localStorage.getItem('astrologer_zodiac');
+            const savedBirthdate = localStorage.getItem('astrologer_birthdate');
+            if (savedZodiac) document.getElementById('zodiac').value = savedZodiac;
+            if (savedBirthdate) document.getElementById('birthdate').value = savedBirthdate;
+        }
+        
+        // Auto-save form data
+        document.getElementById('zodiac').addEventListener('change', saveFormData);
+        document.getElementById('birthdate').addEventListener('change', saveFormData);
+        
+        // Load saved data on page load
+        loadFormData();
+        
+        // Welcome message
+        setTimeout(() => {
+            showToast('🔮 Welcome, seeker of cosmic wisdom! Ask your question.', 4000);
+        }, 1000);
     </script>
 </body>
 </html>

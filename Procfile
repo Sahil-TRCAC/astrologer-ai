@@ -1,1 +1,0 @@
-web: gunicorn astrologer_project.wsgi

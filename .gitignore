@@ -1,6 +1,25 @@
-venv/
-astrologer_ai/venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.so
+venv/
+env/
+ENV/
+
+# Django
 db.sqlite3
+*.log
+/staticfiles/
+
+# Secrets (IMPORTANT!)
 .env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Local files
+*.pyc
+*.pyo
