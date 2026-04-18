@@ -20,14 +20,7 @@ An AI-powered astrology web application that provides personalized cosmic readin
 - **Cosmic Sound Effects**: Optional ambient sounds (432Hz frequency)
 - **Auto-save**: Form data persists across sessions
 
-## 🚀 Demo
 
-[Live Demo on Render](https://your-app-name.onrender.com)
-
-## 📸 Screenshots
-
-![Home Page](screenshots/home.png)
-![Reading Example](screenshots/reading.png)
 
 ## 🛠️ Tech Stack
 
